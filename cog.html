@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Center of Gravity Test</title>
+    <script>
+        function centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight) {
+            const totalFrontMass = frontRightMass + frontLeftMass;
+            const totalRearMass = rearLeftMass + rearRightMass;
+            const totalLeftMass = frontLeftMass + rearLeftMass;
+            const totalRightMass = frontRightMass + rearRightMass;
+
+            const frontMassPercentage = (totalFrontMass / totalMass) * 100;
+            const leftMassPercentage = (totalLeftMass / totalMass) * 100;
+
+            const rightToLeftPosition = (widthBetweenFrontScales * leftMassPercentage) / 100;
+            const centerLineHeight = widthBetweenFrontScales / 2;
+
+            const frontToRearPosition = (widthBetweenFrontAndRearScales * frontMassPercentage) / 100;
+            const centerLineWidth = widthBetweenFrontAndRearScales / 2;
+
+            const rearRecommendedRaise = Math.sin(Math.radians(liftAngle)) * widthBetweenFrontAndRearScales;
+            const adjacentLength = Math.sqrt(Math.pow(widthBetweenFrontAndRearScales, 2) - Math.pow(rearRecommendedRaise, 2));
+
+            const radianValue = Math.atan(rearRecommendedRaise / adjacentLength);
+            const tan0 = Math.degrees(radianValue);
+
+            const frontAxleMassChange = -(totalFrontMass - frontRaisedMass);
+            const numerator = widthBetweenFrontAndRearScales * frontAxleMassChange;
+            const denominator = totalMass * Math.tan(Math.radians(tan0));
+
+            const centerOfGravityHeight = numerator / denominator;
+
+            const distanceFromCenterLineHeight = rightToLeftPosition - centerLineHeight;
+            const distanceFromCenterLineWidth = frontToRearPosition - centerLineWidth;
+            const cogHeightPositionAboveGround = centerOfGravityHeight;
+
+            const result = `Right to left position: ${rightToLeftPosition.toFixed(2)} mm, Front to rear position: ${frontToRearPosition.toFixed(2)} mm, COG height position above ground: ${cogHeightPositionAboveGround.toFixed(2)} mm`;
+            return { result, rightToLeftPosition, frontToRearPosition, cogHeightPositionAboveGround };
+        }
+
+        Math.radians = function(degrees) {
+            return degrees * Math.PI / 180;
+        };
+
+        Math.degrees = function(radians) {
+            return radians * 180 / Math.PI;
+        };
+
+        function drawArrow(ctx, fromX, fromY, toX, toY, text) {
+            const headLength = 10; // Length of the arrow head in pixels
+            const dx = toX - fromX;
+            const dy = toY - fromY;
+            const angle = Math.atan2(dy, dx);
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6), toY - headLength * Math.sin(angle + Math.PI / 6));
+            ctx.stroke();
+            ctx.fillText(text, (fromX + toX) / 2, (fromY + toY) / 2 - 10);
+        }
+
+        function showResultXY() {
+            try {
+                const frontRightMass = parseFloat(document.getElementById('frontRightMass').value);
+                const frontLeftMass = parseFloat(document.getElementById('frontLeftMass').value);
+                const rearLeftMass = parseFloat(document.getElementById('rearLeftMass').value);
+                const rearRightMass = parseFloat(document.getElementById('rearRightMass').value);
+                const totalMass = parseFloat(document.getElementById('totalMass').value);
+                const widthBetweenFrontScales = parseFloat(document.getElementById('widthBetweenFrontScales').value);
+                const widthBetweenFrontAndRearScales = parseFloat(document.getElementById('widthBetweenFrontAndRearScales').value);
+                const liftAngle = parseFloat(document.getElementById('liftAngle').value);
+                const frontRaisedMass = parseFloat(document.getElementById('frontRaisedMass').value);
+                const enclosureHeight = parseFloat(document.getElementById('enclosureHeight').value);
+
+                const { result, rightToLeftPosition, frontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
+                document.getElementById('result').innerText = result;
+
+                // Create the first rectangle image in a new window
+                const newWindow1 = window.open("", "Rectangle Image 1", `width=${widthBetweenFrontAndRearScales + 20},height=${widthBetweenFrontScales + 20}`);
+                newWindow1.document.write('<canvas id="canvas1" style="border:1px solid #000000;"></canvas>');
+                const canvas1 = newWindow1.document.getElementById('canvas1');
+                const ctx1 = canvas1.getContext('2d');
+                ctx1.clearRect(0, 0, canvas1.width, canvas1.height); // Clear the canvas
+
+                const rectWidth1 = widthBetweenFrontAndRearScales;
+                const rectHeight1 = widthBetweenFrontScales;
+
+                canvas1.width = rectWidth1 + 20; // Adding some padding
+                canvas1.height = rectHeight1 + 20; // Adding some padding
+
+                ctx1.strokeRect(10, 10, rectWidth1, rectHeight1); // Draw the rectangle
+                ctx1.font = '26px Arial'; // Set the font size
+                ctx1.fillText('Front', 15, rectHeight1 / 2 + 10); // Mark the front side
+
+                // Add the red dot at the specified position
+                ctx1.fillStyle = "red";
+                ctx1.fillRect(10 + frontToRearPosition - 5, 10 + rightToLeftPosition - 5, 10, 10); // Draw 10x10 red dot
+
+                // Draw arrows with measurements
+                ctx1.strokeStyle = 'black';
+                ctx1.beginPath();
+                drawArrow(ctx1, 10, 10 + rightToLeftPosition, 10 + frontToRearPosition, 10 + rightToLeftPosition, `${frontToRearPosition.toFixed(2)} mm`);
+                drawArrow(ctx1, 10 + frontToRearPosition, 10, 10 + frontToRearPosition, 10 + rightToLeftPosition, `${rightToLeftPosition.toFixed(2)} mm`);
+                ctx1.closePath();
+
+            } catch (error) {
+                alert('Please enter valid numerical values');
+            }
+        }
+
+        function showResultZ() {
+            try {
+                const frontRightMass = parseFloat(document.getElementById('frontRightMass').value);
+                const frontLeftMass = parseFloat(document.getElementById('frontLeftMass').value);
+                const rearLeftMass = parseFloat(document.getElementById('rearLeftMass').value);
+                const rearRightMass = parseFloat(document.getElementById('rearRightMass').value);
+                const totalMass = parseFloat(document.getElementById('totalMass').value);
+                const widthBetweenFrontScales = parseFloat(document.getElementById('widthBetweenFrontScales').value);
+                const widthBetweenFrontAndRearScales = parseFloat(document.getElementById('widthBetweenFrontAndRearScales').value);
+                const liftAngle = parseFloat(document.getElementById('liftAngle').value);
+                const frontRaisedMass = parseFloat(document.getElementById('frontRaisedMass').value);
+                const enclosureHeight = parseFloat(document.getElementById('enclosureHeight').value);
+
+                const { result, rightToLeftPosition, cogHeightPositionAboveGround } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
+
+                // Create the second rectangle image in a new window with width as enclosure height
+                const newWindow2 = window.open("", "Rectangle Image 2", `width=${enclosureHeight + 20},height=${widthBetweenFrontScales + 20}`);
+                newWindow2.document.write('<canvas id="canvas2" style="border:1px solid #000000;"></canvas>');
+                const canvas2 = newWindow2.document.getElementById('canvas2');
+                const ctx2 = canvas2.getContext('2d');
+                ctx2.clearRect(0, 0, canvas2.width, canvas2.height); // Clear the canvas
+
+                const rectWidth2 = enclosureHeight;
+                const rectHeight2 = widthBetweenFrontScales;
+
+                canvas2.width = rectWidth2 + 20; // Adding some padding
+                canvas2.height = rectHeight2 + 20; // Adding some padding
+
+                ctx2.strokeRect(10, 10, rectWidth2, rectHeight2); // Draw the rectangle
+                ctx2.font = '26px Arial'; // Set the font size
+                ctx2.fillText('Front', 15, rectHeight2 / 2 + 10); // Mark the front side
+
+                // Add the red dot at the specified position based on right-to-left position and COG height position above ground switched around
+                ctx2.fillStyle = "red";
+                ctx2.fillRect(10 + cogHeightPositionAboveGround - 5, 10 + rightToLeftPosition - 5, 10, 10); // Draw 10x10 red dot
+
+                // Draw arrows with measurements
+                ctx2.strokeStyle = 'black';
+                ctx2.beginPath();
+                drawArrow(ctx2, 10, 10 + rightToLeftPosition, 10 + cogHeightPositionAboveGround, 10 + rightToLeftPosition, `${cogHeightPositionAboveGround.toFixed(2)} mm`);
+                drawArrow(ctx2, 10 + cogHeightPositionAboveGround, 10, 10 + cogHeightPositionAboveGround, 10 + rightToLeftPosition, `${rightToLeftPosition.toFixed(2)} mm`);
+                ctx2.closePath();
+
+            } catch (error) {
+                alert('Please enter valid numerical values');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Center of Gravity Test</h1>
+    <form onsubmit="event.preventDefault();">
+        <label for="frontRightMass">Enter front right mass in kg:</label>
+        <input type="number" id="frontRightMass" step="any" required><br><br>
+
+        <label for="frontLeftMass">Enter front left mass in kg:</label>
+        <input type="number" id="frontLeftMass" step="any" required><br><br>
+
+        <label for="rearLeftMass">Enter rear left mass in kg:</label>
+        <input type="number" id="rearLeftMass" step="any" required><br><br>
+
+        <label for="rearRightMass">Enter rear right mass in kg:</label>
+        <input type="number" id="rearRightMass" step="any" required><br><br>
+
+        <label for="totalMass">Enter total mass in kg:</label>
+        <input type="number" id="totalMass" step="any" required><br><br>
+
+        <label for="widthBetweenFrontScales">Enter width between front scales in mm:</label>
+        <input type="number" id="widthBetweenFrontScales" step="any" required><br><br>
+
+        <label for="widthBetweenFrontAndRearScales">Enter width between front and rear scales in mm:</label>
+        <input type="number" id="widthBetweenFrontAndRearScales" step="any" required><br><br>
+
+        <label for="liftAngle">Enter lift angle in degrees:</label>
+        <input type="number" id="liftAngle" step="any" required><br><br>
+
+        <label for="frontRaisedMass">Enter front raised mass in kg:</label>
+        <input type="number" id="frontRaisedMass" step="any" required><br><br>
+
+        <label for="enclosureHeight">Enter enclosure height in mm:</label>
+        <input type="number" id="enclosureHeight" step="any" required><br><br>
+
+        <button type="button" onclick="showResultXY()">Result XY</button>
+        <button type="button" onclick="showResultZ()">Result Z</button>
+    </form>
+    <p id="result"></p>
+</body>
+</html>
