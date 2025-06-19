@@ -71,7 +71,7 @@
                 const widthBetweenFrontScales = parseFloat(document.getElementById('widthBetweenFrontScales').value);
                 const widthBetweenFrontAndRearScales = parseFloat(document.getElementById('widthBetweenFrontAndRearScales').value);
 
-                const { result, rightToLeftPosition, frontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
+                const { result, rightToLeftPosition, frontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales);
                 document.getElementById('result').innerText = result;
 
                 // Create the first rectangle image in a new window
