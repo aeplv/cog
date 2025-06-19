@@ -70,9 +70,6 @@
                 const totalMass = parseFloat(document.getElementById('totalMass').value);
                 const widthBetweenFrontScales = parseFloat(document.getElementById('widthBetweenFrontScales').value);
                 const widthBetweenFrontAndRearScales = parseFloat(document.getElementById('widthBetweenFrontAndRearScales').value);
-                const liftAngle = parseFloat(document.getElementById('liftAngle').value);
-                const frontRaisedMass = parseFloat(document.getElementById('frontRaisedMass').value);
-                const enclosureHeight = parseFloat(document.getElementById('enclosureHeight').value);
 
                 const { result, rightToLeftPosition, frontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
                 document.getElementById('result').innerText = result;
