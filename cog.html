@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Center of Gravity Test</title>
@@ -36,7 +35,7 @@
             const distanceFromCenterLineWidth = frontToRearPosition - centerLineWidth;
             const cogHeightPositionAboveGround = centerOfGravityHeight;
 
-            const result = `Right to left position: ${rightToLeftPosition.toFixed(2)} mm, Front to rear position: ${frontToRearPosition.toFixed(2)} mm, COG height position above ground: ${cogHeightPositionAboveGround.toFixed(2)} mm`;
+            const result = `CH2 to CH1 position: ${rightToLeftPosition.toFixed(2)} mm, CH1 to CH4 position: ${frontToRearPosition.toFixed(2)} mm, Position from bottom: ${cogHeightPositionAboveGround.toFixed(2)} mm`;
             return { result, rightToLeftPosition, frontToRearPosition, cogHeightPositionAboveGround };
         }
 
@@ -91,9 +90,19 @@
                 canvas1.width = rectWidth1 + 20; // Adding some padding
                 canvas1.height = rectHeight1 + 20; // Adding some padding
 
+                // Fill with white background
+                ctx1.fillStyle = "white";
+                ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
+
                 ctx1.strokeRect(10, 10, rectWidth1, rectHeight1); // Draw the rectangle
                 ctx1.font = '26px Arial'; // Set the font size
-                ctx1.fillText('Front', 15, rectHeight1 / 2 + 10); // Mark the front side
+
+                // Add labels at the corners
+                ctx1.fillStyle = "black"; // Set the fill style to black for text
+                ctx1.fillText('CH2', 10, 30); // Upper left corner
+                ctx1.fillText('CH3', rectWidth1 - 40, 30); // Upper right corner
+                ctx1.fillText('CH1', 10, rectHeight1 - 10); // Bottom left corner
+                ctx1.fillText('CH4', rectWidth1 - 40, rectHeight1 - 10); // Bottom right corner
 
                 // Add the red dot at the specified position
                 ctx1.fillStyle = "red";
@@ -139,9 +148,16 @@
                 canvas2.width = rectWidth2 + 20; // Adding some padding
                 canvas2.height = rectHeight2 + 20; // Adding some padding
 
+                // Fill with white background
+                ctx2.fillStyle = "white";
+                ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+
                 ctx2.strokeRect(10, 10, rectWidth2, rectHeight2); // Draw the rectangle
                 ctx2.font = '26px Arial'; // Set the font size
-                ctx2.fillText('Front', 15, rectHeight2 / 2 + 10); // Mark the front side
+
+                // Add labels at the corners
+                ctx2.fillStyle = "black"; // Set the fill style to black for text
+                ctx2.fillText('Bottom', 15, rectHeight2 / 2 + 10); // Mark the front side
 
                 // Add the red dot at the specified position based on right-to-left position and COG height position above ground switched around
                 ctx2.fillStyle = "red";
@@ -151,7 +167,7 @@
                 ctx2.strokeStyle = 'black';
                 ctx2.beginPath();
                 drawArrow(ctx2, 10, 10 + rightToLeftPosition, 10 + cogHeightPositionAboveGround, 10 + rightToLeftPosition, `${cogHeightPositionAboveGround.toFixed(2)} mm`);
-                drawArrow(ctx2, 10 + cogHeightPositionAboveGround, 10, 10 + cogHeightPositionAboveGround, 10 + rightToLeftPosition, `${rightToLeftPosition.toFixed(2)} mm`);
+                drawArrow(ctx2, 10 + cogHeightPositionAboveGround, 10, 10 + cogHeightPositionAboveGround, 10 + rightToLeftPosition, ``);
                 ctx2.closePath();
 
             } catch (error) {
@@ -163,39 +179,40 @@
 <body>
     <h1>Center of Gravity Test</h1>
     <form onsubmit="event.preventDefault();">
-        <label for="frontRightMass">Enter front right mass in kg:</label>
-        <input type="number" id="frontRightMass" step="any" required><br><br>
+        <label for="frontRightMass">Enter CH1 mass in kg:</label>
+        <input type="number" id="frontLeftMass" step="any" required=""><br><br>
 
-        <label for="frontLeftMass">Enter front left mass in kg:</label>
-        <input type="number" id="frontLeftMass" step="any" required><br><br>
+        <label for="frontLeftMass">Enter CH2 mass in kg:</label>
+        <input type="number" id="frontRightMass" step="any" required=""><br><br>
 
-        <label for="rearLeftMass">Enter rear left mass in kg:</label>
-        <input type="number" id="rearLeftMass" step="any" required><br><br>
+        <label for="rearLeftMass">Enter CH3 mass in kg:</label>
+        <input type="number" id="rearRightMass" step="any" required=""><br><br>
 
-        <label for="rearRightMass">Enter rear right mass in kg:</label>
-        <input type="number" id="rearRightMass" step="any" required><br><br>
+        <label for="rearRightMass">Enter CH4 mass in kg:</label>
+        <input type="number" id="rearLeftMass" step="any" required=""><br><br>
 
         <label for="totalMass">Enter total mass in kg:</label>
-        <input type="number" id="totalMass" step="any" required><br><br>
+        <input type="number" id="totalMass" step="any" required=""><br><br>
 
-        <label for="widthBetweenFrontScales">Enter width between front scales in mm:</label>
-        <input type="number" id="widthBetweenFrontScales" step="any" required><br><br>
+        <label for="widthBetweenFrontScales">Enter measurement between CH1 and CH2 in mm:</label>
+        <input type="number" id="widthBetweenFrontScales" step="any" required=""><br><br>
 
-        <label for="widthBetweenFrontAndRearScales">Enter width between front and rear scales in mm:</label>
-        <input type="number" id="widthBetweenFrontAndRearScales" step="any" required><br><br>
-
-        <label for="liftAngle">Enter lift angle in degrees:</label>
-        <input type="number" id="liftAngle" step="any" required><br><br>
-
-        <label for="frontRaisedMass">Enter front raised mass in kg:</label>
-        <input type="number" id="frontRaisedMass" step="any" required><br><br>
+        <label for="widthBetweenFrontAndRearScales">Enter measurement between CH1 and CH4 in mm:</label>
+        <input type="number" id="widthBetweenFrontAndRearScales" step="any" required=""><br><br>
 
         <label for="enclosureHeight">Enter enclosure height in mm:</label>
-        <input type="number" id="enclosureHeight" step="any" required><br><br>
+        <input type="number" id="enclosureHeight" step="any" required=""><br><br>
+
+        <label for="liftAngle">Enter lift angle in degrees:</label>
+        <input type="number" id="liftAngle" step="any" required=""><br><br>
+
+        <label for="frontRaisedMass">Enter raised mass (CH1 + CH2) in kg:</label>
+        <input type="number" id="frontRaisedMass" step="any" required=""><br><br>
 
         <button type="button" onclick="showResultXY()">Result XY</button>
         <button type="button" onclick="showResultZ()">Result Z</button>
     </form>
     <p id="result"></p>
+
 </body>
 </html>
