@@ -73,7 +73,7 @@
                 const frontRaisedMass = parseFloat(document.getElementById('frontRaisedMass').value);
                 const enclosureHeight = parseFloat(document.getElementById('enclosureHeight').value);
 
-                const { result, rightToLeftPosition, frontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
+                const { result, rightToLeftPosition, resultfrontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
                 document.getElementById('result').innerText = result;
 
                 // Create the first rectangle image in a new window
