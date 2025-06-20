@@ -32,8 +32,10 @@
             const distanceFromCenterLineWidth = frontToRearPosition - centerLineWidth;
             const cogHeightPositionAboveGround = centerOfGravityHeight;
 
-            const result = `CH2 to CH1 position: ${rightToLeftPosition.toFixed(2)} mm, CH1 to CH4 position: ${frontToRearPosition.toFixed(2)} mm, Position from bottom: ${cogHeightPositionAboveGround.toFixed(2)} mm`;
-            return { result, rightToLeftPosition, frontToRearPosition, cogHeightPositionAboveGround };
+            const resultfrontToRearPosition = widthBetweenFrontAndRearScales - frontToRearPosition
+
+            const result = `CH2 to CH1 position: ${rightToLeftPosition.toFixed(2)} mm, CH1 to CH4 position: ${resultfrontToRearPosition.toFixed(2)} mm, Position from bottom: ${cogHeightPositionAboveGround.toFixed(2)} mm`;
+            return { result, rightToLeftPosition, resultfrontToRearPosition, cogHeightPositionAboveGround };
         }
 
         Math.radians = function(degrees) {
@@ -71,7 +73,7 @@
                 const frontRaisedMass = parseFloat(document.getElementById('frontRaisedMass').value);
                 const enclosureHeight = parseFloat(document.getElementById('enclosureHeight').value);
 
-                const { result, rightToLeftPosition, frontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
+                const { result, rightToLeftPosition, resultfrontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
                 document.getElementById('result').innerText = result;
 
                 // Create the first rectangle image in a new window
@@ -109,7 +111,7 @@
                 ctx1.strokeStyle = 'black';
                 ctx1.beginPath();
                 drawArrow(ctx1, 10, 10 + rightToLeftPosition, 10 + widthBetweenFrontAndRearScales - frontToRearPosition, 10 + rightToLeftPosition, `${frontToRearPosition.toFixed(2)} mm`);
-                drawArrow(ctx1, 10 + widthBetweenFrontAndRearScales - frontToRearPosition, 10, 10 + frontToRearPosition, 10 + rightToLeftPosition, `${rightToLeftPosition.toFixed(2)} mm`);
+                drawArrow(ctx1, 10 + widthBetweenFrontAndRearScales - frontToRearPosition, 10, 10 + widthBetweenFrontAndRearScales - frontToRearPosition, 10 + rightToLeftPosition, `${rightToLeftPosition.toFixed(2)} mm`);
                 ctx1.closePath();
 
             } catch (error) {
