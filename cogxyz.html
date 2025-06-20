@@ -35,7 +35,7 @@
             const resultfrontToRearPosition = widthBetweenFrontAndRearScales - frontToRearPosition
 
             const result = `CH2 to CH1 position: ${rightToLeftPosition.toFixed(2)} mm, CH1 to CH4 position: ${resultfrontToRearPosition.toFixed(2)} mm, Position from bottom: ${cogHeightPositionAboveGround.toFixed(2)} mm`;
-            return { result, rightToLeftPosition, resultfrontToRearPosition, cogHeightPositionAboveGround };
+            return { result, rightToLeftPosition, frontToRearPosition, cogHeightPositionAboveGround };
         }
 
         Math.radians = function(degrees) {
