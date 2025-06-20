@@ -103,12 +103,12 @@
 
                 // Add the red dot at the specified position
                 ctx1.fillStyle = "red";
-                ctx1.fillRect(10 + frontToRearPosition - 5, 10 + rightToLeftPosition - 5, 10, 10); // Draw 10x10 red dot
+                ctx1.fillRect(10 + widthBetweenFrontAndRearScales - frontToRearPosition - 5, 10 + rightToLeftPosition - 5, 10, 10); // Draw 10x10 red dot
 
                 // Draw arrows with measurements
                 ctx1.strokeStyle = 'black';
                 ctx1.beginPath();
-                drawArrow(ctx1, 10, 10 + rightToLeftPosition, 10 + frontToRearPosition, 10 + rightToLeftPosition, `${frontToRearPosition.toFixed(2)} mm`);
+                drawArrow(ctx1, 10, 10 + rightToLeftPosition, 10 + widthBetweenFrontAndRearScales - frontToRearPosition, 10 + rightToLeftPosition, `${frontToRearPosition.toFixed(2)} mm`);
                 drawArrow(ctx1, 10 + widthBetweenFrontAndRearScales - frontToRearPosition, 10, 10 + frontToRearPosition, 10 + rightToLeftPosition, `${rightToLeftPosition.toFixed(2)} mm`);
                 ctx1.closePath();
 
