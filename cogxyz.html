@@ -19,15 +19,12 @@
             const frontToRearPosition = (widthBetweenFrontAndRearScales * frontMassPercentage) / 100;
             const centerLineWidth = widthBetweenFrontAndRearScales / 2;
 
-            const rearRecommendedRaise = Math.sin(Math.radians(liftAngle)) * widthBetweenFrontAndRearScales;
-            const adjacentLength = Math.sqrt(Math.pow(widthBetweenFrontAndRearScales, 2) - Math.pow(rearRecommendedRaise, 2));
+            const liftAngleRadians = Math.radians(liftAngle);
+            const tanLiftAngle = Math.tan(liftAngleRadians);
 
-            const radianValue = Math.atan(rearRecommendedRaise / adjacentLength);
-            const tan0 = Math.degrees(radianValue);
-
-            const frontAxleMassChange = -(totalFrontMass - frontRaisedMass);
+            const frontAxleMassChange = frontRaisedMass - totalFrontMass; // fixed direction of change
             const numerator = widthBetweenFrontAndRearScales * frontAxleMassChange;
-            const denominator = totalMass * Math.tan(Math.radians(tan0));
+            const denominator = totalMass * tanLiftAngle;
 
             const centerOfGravityHeight = numerator / denominator;
 
