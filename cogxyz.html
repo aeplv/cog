@@ -35,7 +35,7 @@
             const resultfrontToRearPosition = widthBetweenFrontAndRearScales - frontToRearPosition
 
             const result = `CH2 to CH1 position: ${rightToLeftPosition.toFixed(2)} mm, CH1 to CH4 position: ${resultfrontToRearPosition.toFixed(2)} mm, Position from bottom: ${cogHeightPositionAboveGround.toFixed(2)} mm`;
-            return { result, rightToLeftPosition, frontToRearPosition, cogHeightPositionAboveGround };
+            return { result, rightToLeftPosition, frontToRearPosition, resultfrontToRearPosition, cogHeightPositionAboveGround };
         }
 
         Math.radians = function(degrees) {
@@ -73,7 +73,7 @@
                 const frontRaisedMass = parseFloat(document.getElementById('frontRaisedMass').value);
                 const enclosureHeight = parseFloat(document.getElementById('enclosureHeight').value);
 
-                const { result, rightToLeftPosition, resultfrontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
+                const { result, rightToLeftPosition, frontToRearPosition, resultfrontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales, liftAngle, frontRaisedMass, enclosureHeight);
                 document.getElementById('result').innerText = result;
 
                 // Create the first rectangle image in a new window
