@@ -19,15 +19,12 @@
             const frontToRearPosition = (widthBetweenFrontAndRearScales * frontMassPercentage) / 100;
             const centerLineWidth = widthBetweenFrontAndRearScales / 2;
 
-            const rearRecommendedRaise = Math.sin(Math.radians(liftAngle)) * widthBetweenFrontAndRearScales;
-            const adjacentLength = Math.sqrt(Math.pow(widthBetweenFrontAndRearScales, 2) - Math.pow(rearRecommendedRaise, 2));
+            const liftAngleRadians = Math.radians(liftAngle);
+            const tanLiftAngle = Math.tan(liftAngleRadians);
 
-            const radianValue = Math.atan(rearRecommendedRaise / adjacentLength);
-            const tan0 = Math.degrees(radianValue);
-
-            const frontAxleMassChange = -(totalFrontMass - frontRaisedMass);
+            const frontAxleMassChange = frontRaisedMass - totalFrontMass; // fixed direction of change
             const numerator = widthBetweenFrontAndRearScales * frontAxleMassChange;
-            const denominator = totalMass * Math.tan(Math.radians(tan0));
+            const denominator = totalMass * tanLiftAngle;
 
             const centerOfGravityHeight = numerator / denominator;
 
@@ -35,8 +32,10 @@
             const distanceFromCenterLineWidth = frontToRearPosition - centerLineWidth;
             const cogHeightPositionAboveGround = centerOfGravityHeight;
 
-            const result = `CH2 to CH1 position: ${rightToLeftPosition.toFixed(2)} mm, CH1 to CH4 position: ${frontToRearPosition.toFixed(2)} mm, Position from bottom: ${cogHeightPositionAboveGround.toFixed(2)} mm`;
-            return { result, rightToLeftPosition, frontToRearPosition, cogHeightPositionAboveGround };
+            const resultfrontToRearPosition = widthBetweenFrontAndRearScales - frontToRearPosition
+
+            const result = `CH2 to CH1 position: ${rightToLeftPosition.toFixed(2)} mm, CH1 to CH4 position: ${resultfrontToRearPosition.toFixed(2)} mm, Position from bottom: ${cogHeightPositionAboveGround.toFixed(2)} mm`;
+            return { result, rightToLeftPosition, frontToRearPosition, resultfrontToRearPosition, cogHeightPositionAboveGround };
         }
 
         Math.radians = function(degrees) {
@@ -71,7 +70,7 @@
                 const widthBetweenFrontScales = parseFloat(document.getElementById('widthBetweenFrontScales').value);
                 const widthBetweenFrontAndRearScales = parseFloat(document.getElementById('widthBetweenFrontAndRearScales').value);
 
-                const { result, rightToLeftPosition, frontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales);
+                const { result, rightToLeftPosition, frontToRearPosition, resultfrontToRearPosition } = centerOfGravity(frontRightMass, frontLeftMass, rearLeftMass, rearRightMass, totalMass, widthBetweenFrontScales, widthBetweenFrontAndRearScales);
                 document.getElementById('result').innerText = result;
 
                 // Create the first rectangle image in a new window
@@ -103,13 +102,13 @@
 
                 // Add the red dot at the specified position
                 ctx1.fillStyle = "red";
-                ctx1.fillRect(10 + frontToRearPosition - 5, 10 + rightToLeftPosition - 5, 10, 10); // Draw 10x10 red dot
+                ctx1.fillRect(10 + widthBetweenFrontAndRearScales - frontToRearPosition - 5, 10 + rightToLeftPosition - 5, 10, 10); // Draw 10x10 red dot
 
                 // Draw arrows with measurements
                 ctx1.strokeStyle = 'black';
                 ctx1.beginPath();
-                drawArrow(ctx1, 10, 10 + rightToLeftPosition, 10 + frontToRearPosition, 10 + rightToLeftPosition, `${frontToRearPosition.toFixed(2)} mm`);
-                drawArrow(ctx1, 10 + frontToRearPosition, 10, 10 + frontToRearPosition, 10 + rightToLeftPosition, `${rightToLeftPosition.toFixed(2)} mm`);
+                drawArrow(ctx1, 10, 10 + rightToLeftPosition, 10 + widthBetweenFrontAndRearScales - frontToRearPosition, 10 + rightToLeftPosition, `${resultfrontToRearPosition.toFixed(2)} mm`);
+                drawArrow(ctx1, 10 + widthBetweenFrontAndRearScales - frontToRearPosition, 10, 10 + widthBetweenFrontAndRearScales - frontToRearPosition, 10 + rightToLeftPosition, `${rightToLeftPosition.toFixed(2)} mm`);
                 ctx1.closePath();
 
             } catch (error) {
@@ -176,17 +175,17 @@
 <body>
     <h1>Center of Gravity Test</h1>
     <form onsubmit="event.preventDefault();">
-        <label for="rearLeftMass">Enter CH1 mass in kg:</label>
-        <input type="number" id="rearLeftMass" step="any" required=""><br><br>
+        <label for="frontLeftMass">Enter CH1 mass in kg:</label>
+        <input type="number" id="frontLeftMass" step="any" required=""><br><br>
 
-        <label for="rearRightMass">Enter CH2 mass in kg:</label>
-        <input type="number" id="rearRightMass" step="any" required=""><br><br>
-
-        <label for="frontRightMass">Enter CH3 mass in kg:</label>
+        <label for="frontRightMass">Enter CH2 mass in kg:</label>
         <input type="number" id="frontRightMass" step="any" required=""><br><br>
 
-        <label for="frontLeftMass">Enter CH4 mass in kg:</label>
-        <input type="number" id="frontLeftMass" step="any" required=""><br><br>
+        <label for="rearRightMass">Enter CH3 mass in kg:</label>
+        <input type="number" id="rearRightMass" step="any" required=""><br><br>
+
+        <label for="rearLeftMass">Enter CH4 mass in kg:</label>
+        <input type="number" id="rearLeftMass" step="any" required=""><br><br>
 
         <label for="totalMass">Enter total mass in kg:</label>
         <input type="number" id="totalMass" step="any" required=""><br><br>
